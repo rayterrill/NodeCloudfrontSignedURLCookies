@@ -1,0 +1,15 @@
+var express = require('express');
+var app = express();
+var cf = require('aws-cloudfront-sign');
+
+var PORT = process.env.PORT || 3000
+
+var options = { keypairId: process.env.CLOUDFRONT_KEY_PAIRID, privateKeyString: process.env.CLOUDFRONT_KEY};
+var Url = 'http://' + process.env.CLOUDFRONT_BASE_URL + '/image.jpg';
+var signedUrl = cf.getSignedUrl(Url, options);
+
+app.get('/', function (req, res) {
+    res.send('<img src="' + signedUrl + '" />');
+});
+
+app.listen(PORT);
